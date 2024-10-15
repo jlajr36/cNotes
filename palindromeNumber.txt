@@ -1,0 +1,6 @@
+bool isPalindrome(int x) {
+    string s = to_string(x);
+    string keep_og = s;
+    reverse(s.begin(), s.end());
+    return s == keep_og;
+}
