@@ -1,0 +1,231 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define the Node structure
+struct Node {
+    char data[100];   // Data to store string values
+    struct Node* next; // Pointer to the next node
+};
+
+// Define the LinkedList structure
+struct LinkedList {
+    struct Node* head; // Head pointer to the linked list
+};
+
+// Function to create a new node
+struct Node* createNode(const char* data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    strcpy_s(newNode->data, sizeof(newNode->data), data);  // Use strcpy_s to avoid security warning
+    newNode->next = NULL;          // Set next to NULL initially
+    return newNode;
+}
+
+// Function to initialize a new linked list
+void initLinkedList(struct LinkedList* list) {
+    list->head = NULL;
+}
+
+// Method to insert a node at the beginning
+void insertAtBegin(struct LinkedList* list, const char* data) {
+    struct Node* newNode = createNode(data);
+    if (list->head == NULL) {
+        list->head = newNode;
+    }
+    else {
+        newNode->next = list->head;
+        list->head = newNode;
+    }
+}
+
+// Method to insert a node at a given index
+void insertAtIndex(struct LinkedList* list, const char* data, int index) {
+    if (index == 0) {
+        insertAtBegin(list, data);
+        return;
+    }
+
+    struct Node* current = list->head;
+    int position = 0;
+
+    while (current != NULL && position + 1 != index) {
+        current = current->next;
+        position++;
+    }
+
+    if (current != NULL) {
+        struct Node* newNode = createNode(data);
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+    else {
+        printf("Index not present\n");
+    }
+}
+
+// Method to insert a node at the end
+void insertAtEnd(struct LinkedList* list, const char* data) {
+    struct Node* newNode = createNode(data);
+    if (list->head == NULL) {
+        list->head = newNode;
+    }
+    else {
+        struct Node* current = list->head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Method to update a node's value at a given index
+void updateNode(struct LinkedList* list, const char* data, int index) {
+    struct Node* current = list->head;
+    int position = 0;
+
+    while (current != NULL && position != index) {
+        current = current->next;
+        position++;
+    }
+
+    if (current != NULL) {
+        strcpy_s(current->data, sizeof(current->data), data);  // Use strcpy_s to avoid security warning
+    }
+    else {
+        printf("Index not present\n");
+    }
+}
+
+// Method to remove the first node
+void removeFirstNode(struct LinkedList* list) {
+    if (list->head != NULL) {
+        struct Node* temp = list->head;
+        list->head = list->head->next;
+        free(temp);
+    }
+}
+
+// Method to remove the last node
+void removeLastNode(struct LinkedList* list) {
+    if (list->head == NULL) {
+        return;
+    }
+
+    if (list->head->next == NULL) {
+        free(list->head);
+        list->head = NULL;
+    }
+    else {
+        struct Node* current = list->head;
+        while (current->next != NULL && current->next->next != NULL) {
+            current = current->next;
+        }
+        free(current->next);
+        current->next = NULL;
+    }
+}
+
+// Method to remove a node at a given index
+void removeAtIndex(struct LinkedList* list, int index) {
+    if (list->head == NULL) {
+        return;
+    }
+
+    if (index == 0) {
+        removeFirstNode(list);
+        return;
+    }
+
+    struct Node* current = list->head;
+    int position = 0;
+
+    while (current != NULL && position + 1 != index) {
+        current = current->next;
+        position++;
+    }
+
+    if (current != NULL && current->next != NULL) {
+        struct Node* temp = current->next;
+        current->next = current->next->next;
+        free(temp);
+    }
+    else {
+        printf("Index not present\n");
+    }
+}
+
+// Method to remove a node by its data value
+void removeNode(struct LinkedList* list, const char* data) {
+    if (list->head == NULL) {
+        return;
+    }
+
+    if (strcmp(list->head->data, data) == 0) {
+        removeFirstNode(list);
+        return;
+    }
+
+    struct Node* current = list->head;
+    while (current->next != NULL && strcmp(current->next->data, data) != 0) {
+        current = current->next;
+    }
+
+    if (current->next != NULL) {
+        struct Node* temp = current->next;
+        current->next = current->next->next;
+        free(temp);
+    }
+}
+
+// Method to calculate the size of the linked list
+int sizeOfLL(struct LinkedList* list) {
+    int size = 0;
+    struct Node* current = list->head;
+    while (current != NULL) {
+        size++;
+        current = current->next;
+    }
+    return size;
+}
+
+// Method to print all nodes in the linked list
+void printLL(struct LinkedList* list) {
+    struct Node* current = list->head;
+    while (current != NULL) {
+        printf("%s\n", current->data);
+        current = current->next;
+    }
+}
+
+// Driver function to demonstrate the LinkedList operations
+int main() {
+    struct LinkedList list;
+    initLinkedList(&list);
+
+    insertAtEnd(&list, "a");
+    insertAtEnd(&list, "b");
+    insertAtBegin(&list, "c");
+    insertAtEnd(&list, "d");
+    insertAtIndex(&list, "g", 2);
+
+    printf("Node Data:\n");
+    printLL(&list);
+
+    printf("\nRemove First Node:\n");
+    removeFirstNode(&list);
+    printf("Remove Last Node:\n");
+    removeLastNode(&list);
+    printf("Remove Node at Index 1:\n");
+    removeAtIndex(&list, 1);
+
+    printf("\nLinked list after removing nodes:\n");
+    printLL(&list);
+
+    printf("\nUpdate node Value:\n");
+    updateNode(&list, "z", 0);
+    printLL(&list);
+
+    printf("\nSize of linked list: %d\n", sizeOfLL(&list));
+
+    return 0;
+}
