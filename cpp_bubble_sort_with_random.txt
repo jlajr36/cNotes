@@ -1,0 +1,82 @@
+#include <iostream>
+#include <random>
+
+using namespace std;
+
+void printVector(const vector<int>& vec)
+{
+    cout << "[ ";
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        cout << vec[i];
+        if (i < vec.size() - 1)
+        {
+            cout << ", ";
+        }
+    }
+    cout << " ]" << endl;
+}
+
+vector<int> bubble_sort(vector<int>& vec)
+{
+    for (int i = 1; i < vec.size(); i++)
+    {
+        for (int j = 0; j < vec.size() - 1; j++)
+        {
+            if (vec[j] > vec[j+1])
+            {
+                int temp = vec[j];
+                vec[j] = vec[j+1];
+                vec[j+1] = temp;
+            }
+        }
+    }
+    return vec;
+}
+
+void check_pass(vector<int> vec)
+{
+    for (int i = 1; i < vec.size(); i++)
+    {
+        for (int j = 0; j < vec.size() - 1; j++)
+        {
+            if (vec[j] > vec[j+1])
+            {
+                cout << "Fail" << endl;
+                return;
+            }
+        }
+    }
+    cout << "Pass" << endl;
+}
+
+int main()
+{
+    random_device rd;
+    mt19937 eng(rd());
+
+    uniform_int_distribution<> distr100(1, 100);
+    uniform_int_distribution<> distr20(1, 20);
+
+    int num_cases = 10;
+    for (int i = 0; i < num_cases; i++)
+    {
+        cout << "Test case: " << i + 1 << endl;
+
+        int list_length = distr20(eng);
+        vector<int> random_number_list;
+        for (int i = 0; i < list_length; ++i) {
+           random_number_list.push_back(distr100(eng));
+        }
+        printVector(random_number_list);
+
+        vector<int> new_list = bubble_sort(random_number_list);
+        printVector(new_list);
+
+        check_pass(new_list);
+
+        cout << endl;
+    }
+
+    return 0;
+}
