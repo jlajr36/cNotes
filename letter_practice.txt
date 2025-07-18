@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <conio.h>
+#include <windows.h>
+
+using namespace std;
+
+void setColor (int textColor) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, textColor);
+}
+
+int main()
+{
+    srand(static_cast<unsigned int>(time(0)));
+    char random_letter = 'a';
+    char user_input;
+
+    while (true) {
+        random_letter = 'a' + rand() % 26;
+        cout << "Type the letter: " << random_letter << " => ";
+
+        while (true) {
+            user_input = _getch();
+
+            if (user_input == '0') {
+                return 0;
+            }
+
+            //cout << endl << "You typed: " << user_input;
+
+            if (user_input == random_letter) {
+                setColor(10);
+                cout << " That is Correct!" << endl;
+                setColor(7);
+                break;
+            } else {
+                setColor(12);
+                cout << " That is Incorrect! You typed: " << user_input << endl;
+                setColor(7);
+                cout << "Type the letter: " << random_letter << " => ";
+            }
+
+        }
+    }
+
+    return 0;
+}
