@@ -1,1 +1,1 @@
-Code in C / C++ using raylib library.
+Random small pieces of C/C++ code.
